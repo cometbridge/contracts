@@ -2,7 +2,8 @@
   "name": "comet-contracts",
   "devDependencies": {
     "@nomicfoundation/hardhat-toolbox": "^5.0.0",
-    "hardhat": "^2.22.2"
+    "hardhat": "^2.22.2",
+    "ts-node": "^10.9.2"
   },
   "dependencies": {
     "@openzeppelin/contracts": "^5.0.2"
