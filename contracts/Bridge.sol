@@ -21,6 +21,7 @@ contract Bridge is Ownable, ReentrancyGuard {
   error InvalidValue();
   error AmountMustEqualValue();
   error ParamsError();
+  error Initialized();
 
   event Bridged(address sender, address provider, address token, uint256 amount, bytes metadata, uint256 index);
   event Released(address recipient, address provider, address token, uint256 amount, bytes metadata, uint256 index);
@@ -52,7 +53,10 @@ contract Bridge is Ownable, ReentrancyGuard {
   constructor() Ownable(msg.sender) {}
 
   function initialize(bool _isEnabled) external onlyOwner {
+    if (s().initialized) revert Initialized();
+
     s().isEnabled = _isEnabled;
+    s().initialized = true;
   }
 
   function setIsEnabled(bool _isEnabled) external onlyOwner {
@@ -95,6 +99,16 @@ contract Bridge is Ownable, ReentrancyGuard {
     bytes[] memory metadatas
   ) external payable onlyEnabled nonReentrant {
     if (amounts.length != tokens.length || amounts.length != recipients.length || amounts.length != metadatas.length) revert InvalidArgs();
+
+    uint256 tAmount;
+
+    for (uint256 i = 0; i < amounts.length; i++) {
+      if (tokens[i] == address(0)) {
+        tAmount += amounts[i];
+      }
+    }
+
+    if (tAmount != msg.value) revert AmountMustEqualValue();
 
     for (uint256 i = 0; i < amounts.length; i++) {
       _release(amounts[i], tokens[i], recipients[i], metadatas[i]);
@@ -149,5 +163,15 @@ contract Bridge is Ownable, ReentrancyGuard {
     return s().isEnabled;
   }
 
-  fallback() external {}
+  // to help users who accidentally send their tokens to this contract
+  function withdrawToken(address token, address account, uint256 amount) external onlyOwner {
+    IERC20(token).safeTransfer(account, amount);
+  }
+
+  // to help users who accidentally send their ether to this contract
+  function withdrawEther(address payable account, uint256 amount) external onlyOwner {
+    account.sendValue(amount);
+  }
+
+  // fallback() external payable {}
 }

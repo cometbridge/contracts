@@ -28,6 +28,12 @@ describe('Bridge', function () {
       expect(await bridge.owner()).to.equal(owner.address)
     })
 
+    it('Should set the right initialize', async function () {
+      const { bridge } = await loadFixture(deployFixture)
+
+      await expect(bridge.initialize(true)).to.revertedWithCustomError(bridge, 'Initialized')
+    })
+
     it('Should set the right change owner', async function () {
       const { bridge, otherAccount } = await loadFixture(deployFixture)
 
@@ -44,6 +50,25 @@ describe('Bridge', function () {
         .withArgs(true)
 
       expect(await bridge.isEnabled()).to.equal(true)
+    })
+
+    it('Should set the right withdraw token', async function () {
+      const { bridge, otherAccount, token } = await loadFixture(deployFixture)
+
+      const amount = hre.ethers.parseEther('0.01')
+
+      // await otherAccount.sendTransaction({
+      //   to: bridge.getAddress(),
+      //   value: hre.ethers.parseEther('0.01')
+      // })
+      // expect(await bridge.withdrawEther(otherAccount.address, amount)).to.changeEtherBalances([bridge.getAddress(), otherAccount], [-amount, amount])
+
+      await token.transfer(bridge.getAddress(), amount)
+      expect(await bridge.withdrawToken(token.getAddress(), otherAccount.address, amount)).to.changeTokenBalances(
+        token,
+        [bridge.getAddress(), otherAccount],
+        [-amount, amount]
+      )
     })
   })
 
@@ -265,6 +290,24 @@ describe('Bridge', function () {
             value: value
           })
         ).to.revertedWithCustomError(bridge, 'InvalidArgs')
+      })
+      it('Should revert with the right error if value not equal value', async function () {
+        const { bridge, otherAccount, cometProvider, user1, user2 } = await loadFixture(deployFixture)
+
+        const args: [bigint[], string[], string[], Buffer[]] = [
+          [amount, amount + 123n, amount - 123n],
+          [hre.ethers.ZeroAddress, hre.ethers.ZeroAddress, hre.ethers.ZeroAddress],
+          [otherAccount.address, user1.address, user2.address],
+          [metadata, metadata, metadata]
+        ]
+
+        const value = args[0].reduce((t, i) => t + i , 0n) - 100n
+
+        await expect(
+          bridge.connect(cometProvider).multiRelease(...args, {
+            value: value
+          })
+        ).to.revertedWithCustomError(bridge, 'AmountMustEqualValue')
       })
 
       it('Should transfer the eth to the users', async function () {
