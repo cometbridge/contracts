@@ -1,10 +1,9 @@
-import { buildModule } from "@nomicfoundation/hardhat-ignition/modules";
+import { buildModule } from '@nomicfoundation/hardhat-ignition/modules'
 
-const BridgeModule = buildModule("BridgeModule", (m) => {
+const BridgeModule = buildModule('BridgeModule', m => {
+  const bridge = m.contract('Bridge')
 
-  const bridge = m.contract("Bridge");
+  return { bridge }
+})
 
-  return { bridge };
-});
-
-export default BridgeModule;
+export default BridgeModule

@@ -17,7 +17,14 @@ contract Bridge is Ownable, ReentrancyGuard {
   error InvalidAmount(uint256 amount);
   error InvalidProvider();
   error InvalidRecipientAddress();
+  error InvalidArgs();
+  error InvalidValue();
+  error AmountMustEqualValue();
   error ParamsError();
+
+  event Bridged(address sender, address provider, address token, uint256 amount, bytes metadata, uint256 index);
+  event Released(address recipient, address provider, address token, uint256 amount, bytes metadata, uint256 index);
+  event EnableChanged(bool isEnabled);
 
   struct BridgeStorage {
     bool isEnabled;
@@ -50,11 +57,14 @@ contract Bridge is Ownable, ReentrancyGuard {
 
   function setIsEnabled(bool _isEnabled) external onlyOwner {
     s().isEnabled = _isEnabled;
+
+    emit EnableChanged(_isEnabled);
   }
 
   function bridge(uint256 amount, address token, address payable provider, bytes memory metadata) external payable onlyEnabled nonReentrant {
     if (provider == address(0)) revert InvalidProvider();
     if (amount == 0) revert InvalidAmount(amount);
+    if (token == address(0) && amount != msg.value) revert AmountMustEqualValue();
 
     address user = msg.sender;
 
@@ -64,11 +74,17 @@ contract Bridge is Ownable, ReentrancyGuard {
       IERC20(token).safeTransferFrom(user, provider, amount);
     }
 
+    uint256 index = bridgeIndex(user);
+
     storeBridgeMetadata(user, metadata);
     increaseBridgeIndex(user);
+
+    emit Bridged(msg.sender, provider, token, amount, metadata, index);
   }
 
   function release(uint256 amount, address token, address payable recipient, bytes memory metadata) external payable onlyEnabled nonReentrant {
+    if (token == address(0) && amount != msg.value) revert AmountMustEqualValue();
+
     _release(amount, token, recipient, metadata);
   }
 
@@ -78,6 +94,8 @@ contract Bridge is Ownable, ReentrancyGuard {
     address payable[] memory recipients,
     bytes[] memory metadatas
   ) external payable onlyEnabled nonReentrant {
+    if (amounts.length != tokens.length || amounts.length != recipients.length || amounts.length != metadatas.length) revert InvalidArgs();
+
     for (uint256 i = 0; i < amounts.length; i++) {
       _release(amounts[i], tokens[i], recipients[i], metadatas[i]);
     }
@@ -90,13 +108,17 @@ contract Bridge is Ownable, ReentrancyGuard {
     address provider = msg.sender;
 
     if (token == address(0)) {
-      recipient.sendValue(msg.value);
+      recipient.sendValue(amount);
     } else {
       IERC20(token).safeTransferFrom(provider, recipient, amount);
     }
 
+    uint256 index = releaseIndex(provider);
+
     storeReleaseMetadata(provider, metadata);
     increaseReleaseIndex(provider);
+
+    emit Released(recipient, provider, token, amount, metadata, index);
   }
 
   function storeBridgeMetadata(address user, bytes memory metadata) internal {
@@ -115,12 +137,12 @@ contract Bridge is Ownable, ReentrancyGuard {
     s().releaseIndexs[provider] += 1;
   }
 
-  function releaseIndex(address user) public view returns (uint256) {
-    return s().releaseIndexs[user];
+  function releaseIndex(address provider) public view returns (uint256) {
+    return s().releaseIndexs[provider];
   }
 
-  function bridgeIndex(address provider) public view returns (uint256) {
-    return s().bridgeIndexs[provider];
+  function bridgeIndex(address user) public view returns (uint256) {
+    return s().bridgeIndexs[user];
   }
 
   function isEnabled() public view returns (bool) {
