@@ -8,8 +8,24 @@ const accounts = WALLET_PRIVATE_KEY !== undefined ? [WALLET_PRIVATE_KEY] : []
 const config: HardhatUserConfig = {
   solidity: '0.8.24',
   networks: {
+    Sepolia: {
+      url: 'https://rpc.sepolia.org',
+      accounts: accounts
+    },
     ArbSepolia: {
       url: 'https://sepolia-rollup.arbitrum.io/rpc',
+      accounts: accounts
+    },
+    BlastSepolia: {
+      url: 'http://testnet-rpc.blastblockchain.com',
+      accounts: accounts
+    },
+    ScrollSepolia: {
+      url: 'https://sepolia-rpc.scroll.io',
+      accounts: accounts
+    },
+    KromaSepolia: {
+      url: 'https://api.sepolia.kroma.network',
       accounts: accounts
     },
     local: {
