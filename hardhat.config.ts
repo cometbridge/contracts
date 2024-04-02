@@ -17,7 +17,7 @@ const config: HardhatUserConfig = {
       accounts: accounts
     },
     BlastSepolia: {
-      url: 'http://testnet-rpc.blastblockchain.com',
+      url: 'https://sepolia.blast.io',
       accounts: accounts
     },
     ScrollSepolia: {

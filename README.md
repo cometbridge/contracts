@@ -11,4 +11,5 @@ npx hardhat test
 REPORT_GAS=true npx hardhat test
 npx hardhat node
 npx hardhat ignition deploy ./ignition/modules/Bridge.ts
+npx hardhat ignition deploy ./ignition/modules/Bridge.ts --network Sepolia
 ```
