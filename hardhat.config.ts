@@ -1,37 +1,32 @@
-import { HardhatUserConfig, vars } from 'hardhat/config'
-import '@nomicfoundation/hardhat-toolbox'
+import { HardhatUserConfig } from 'hardhat/config'
 
-const WALLET_PRIVATE_KEY = vars.get('WALLET_PRIVATE_KEY')
+import '@matterlabs/hardhat-zksync-deploy'
+import '@matterlabs/hardhat-zksync-solc'
 
-const accounts = WALLET_PRIVATE_KEY !== undefined ? [WALLET_PRIVATE_KEY] : []
+import '@matterlabs/hardhat-zksync-verify'
+
+const zkSyncTestnet = {
+  url: 'https://zksync-sepolia.drpc.org',
+  ethNetwork: 'sepolia',
+  zksync: true,
+  // contract verification endpoint
+  verifyURL: 'https://explorer.sepolia.era.zksync.dev/contract_verification'
+}
 
 const config: HardhatUserConfig = {
-  solidity: '0.8.24',
+  zksolc: {
+    version: 'latest',
+    settings: {}
+  },
+  defaultNetwork: 'zkSyncTestnet',
   networks: {
-    Sepolia: {
-      url: 'https://rpc.sepolia.org',
-      accounts: accounts
+    hardhat: {
+      zksync: false
     },
-    ArbSepolia: {
-      url: 'https://sepolia-rollup.arbitrum.io/rpc',
-      accounts: accounts
-    },
-    BlastSepolia: {
-      url: 'http://testnet-rpc.blastblockchain.com',
-      accounts: accounts
-    },
-    ScrollSepolia: {
-      url: 'https://sepolia-rpc.scroll.io',
-      accounts: accounts
-    },
-    KromaSepolia: {
-      url: 'https://api.sepolia.kroma.network',
-      accounts: accounts
-    },
-    local: {
-      url: 'http://127.0.0.1:8545/',
-      accounts: accounts
-    }
+    zkSyncTestnet
+  },
+  solidity: {
+    version: '0.8.24'
   }
 }
 

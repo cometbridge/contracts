@@ -1,0 +1,1 @@
+export const sepoliaAddress = '0xA151d87100352089e52a70Ca8D52983cC9b39D47'
