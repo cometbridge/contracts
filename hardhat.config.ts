@@ -28,6 +28,14 @@ const config: HardhatUserConfig = {
       url: 'https://api.sepolia.kroma.network',
       accounts: accounts
     },
+    HoleSky: {
+      url: 'https://ethereum-holesky.publicnode.com',
+      accounts: accounts
+    },
+    Katla: {
+      url: 'https://rpc.katla.taiko.xyz',
+      accounts: accounts
+    },
     local: {
       url: 'http://127.0.0.1:8545/',
       accounts: accounts
