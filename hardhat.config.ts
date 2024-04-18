@@ -13,17 +13,24 @@ const zkSyncTestnet = {
   verifyURL: 'https://explorer.sepolia.era.zksync.dev/contract_verification'
 }
 
+const zkLinkTestnet = {
+  url: 'https://sepolia.rpc.zklink.io',
+  ethNetwork: 'sepolia',
+  zksync: true,
+}
+
 const config: HardhatUserConfig = {
   zksolc: {
     version: 'latest',
     settings: {}
   },
-  defaultNetwork: 'zkSyncTestnet',
+  defaultNetwork: 'zkLinkTestnet',
   networks: {
     hardhat: {
       zksync: false
     },
-    zkSyncTestnet
+    zkSyncTestnet,
+    zkLinkTestnet
   },
   solidity: {
     version: '0.8.24'
