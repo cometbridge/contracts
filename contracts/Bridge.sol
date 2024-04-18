@@ -23,17 +23,13 @@ contract Bridge is Ownable, ReentrancyGuard {
   error ParamsError();
   error Initialized();
 
-  event Bridged(address sender, address provider, address token, uint256 amount, bytes metadata, uint256 index);
-  event Released(address recipient, address provider, address token, uint256 amount, bytes metadata, uint256 index);
+  event Bridged(address sender, address provider, address token, uint256 amount, bytes metadata);
+  event Released(address recipient, address provider, address token, uint256 amount, bytes metadata);
   event EnableChanged(bool isEnabled);
 
   struct BridgeStorage {
     bool isEnabled;
     bool initialized;
-    mapping(address => uint256) bridgeIndexs;
-    mapping(address => uint256) releaseIndexs;
-    mapping(address => mapping(uint256 => bytes)) bridges;
-    mapping(address => mapping(uint256 => bytes)) releases;
   }
 
   function s() internal pure returns (BridgeStorage storage cs) {
@@ -78,12 +74,7 @@ contract Bridge is Ownable, ReentrancyGuard {
       IERC20(token).safeTransferFrom(user, provider, amount);
     }
 
-    uint256 index = bridgeIndex(user);
-
-    storeBridgeMetadata(user, metadata);
-    increaseBridgeIndex(user);
-
-    emit Bridged(msg.sender, provider, token, amount, metadata, index);
+    emit Bridged(msg.sender, provider, token, amount, metadata);
   }
 
   function release(uint256 amount, address token, address payable recipient, bytes memory metadata) external payable onlyEnabled nonReentrant {
@@ -127,36 +118,7 @@ contract Bridge is Ownable, ReentrancyGuard {
       IERC20(token).safeTransferFrom(provider, recipient, amount);
     }
 
-    uint256 index = releaseIndex(provider);
-
-    storeReleaseMetadata(provider, metadata);
-    increaseReleaseIndex(provider);
-
-    emit Released(recipient, provider, token, amount, metadata, index);
-  }
-
-  function storeBridgeMetadata(address user, bytes memory metadata) internal {
-    s().bridges[user][bridgeIndex(user)] = metadata;
-  }
-
-  function storeReleaseMetadata(address provider, bytes memory metadata) internal {
-    s().releases[provider][releaseIndex(provider)] = metadata;
-  }
-
-  function increaseBridgeIndex(address user) internal {
-    s().bridgeIndexs[user] += 1;
-  }
-
-  function increaseReleaseIndex(address provider) internal {
-    s().releaseIndexs[provider] += 1;
-  }
-
-  function releaseIndex(address provider) public view returns (uint256) {
-    return s().releaseIndexs[provider];
-  }
-
-  function bridgeIndex(address user) public view returns (uint256) {
-    return s().bridgeIndexs[user];
+    emit Released(recipient, provider, token, amount, metadata);
   }
 
   function isEnabled() public view returns (bool) {
