@@ -12,6 +12,10 @@ const config: HardhatUserConfig = {
       url: 'https://arbitrum-one-rpc.publicnode.com',
       accounts: accounts
     },
+    Mode: {
+      url: 'https://mainnet.mode.network',
+      accounts: accounts
+    },
     local: {
       url: 'http://127.0.0.1:8545/',
       accounts: accounts
