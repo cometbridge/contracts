@@ -16,6 +16,18 @@ const config: HardhatUserConfig = {
       url: 'https://mainnet.mode.network',
       accounts: accounts
     },
+    Scroll: {
+      url: 'https://rpc.scroll.io',
+      accounts: accounts
+    },
+    Linea: {
+      url: 'https://rpc.linea.build',
+      accounts: accounts
+    },
+    Base: {
+      url: 'https://1rpc.io/base',
+      accounts: accounts
+    },
     local: {
       url: 'http://127.0.0.1:8545/',
       accounts: accounts
