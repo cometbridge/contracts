@@ -28,6 +28,10 @@ const config: HardhatUserConfig = {
       url: 'https://1rpc.io/base',
       accounts: accounts
     },
+    Zeta: {
+      url: 'https://zetachain-evm.blockpi.network/v1/rpc/public',
+      accounts: accounts
+    },
     local: {
       url: 'http://127.0.0.1:8545/',
       accounts: accounts
