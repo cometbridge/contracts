@@ -32,6 +32,10 @@ const config: HardhatUserConfig = {
       url: 'https://zetachain-evm.blockpi.network/v1/rpc/public',
       accounts: accounts
     },
+    Merlin: {
+      url: 'https://merlin.blockpi.network/v1/rpc/public',
+      accounts: accounts
+    },
     local: {
       url: 'http://127.0.0.1:8545/',
       accounts: accounts
