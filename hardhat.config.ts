@@ -8,6 +8,10 @@ const accounts = WALLET_PRIVATE_KEY !== undefined ? [WALLET_PRIVATE_KEY] : []
 const config: HardhatUserConfig = {
   solidity: '0.8.24',
   networks: {
+    Ethereum: {
+      url: 'https://ethereum.rpc.subquery.network/public',
+      accounts: accounts
+    },
     Arbitrum: {
       url: 'https://arbitrum-one-rpc.publicnode.com',
       accounts: accounts
