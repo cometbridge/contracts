@@ -44,6 +44,10 @@ const config: HardhatUserConfig = {
       url: 'https://rpc.ankr.com/bitlayer',
       accounts: accounts
     },
+    XLayer: {
+      url: 'https://rpc.xlayer.tech',
+      accounts: accounts
+    },
     local: {
       url: 'http://127.0.0.1:8545/',
       accounts: accounts
