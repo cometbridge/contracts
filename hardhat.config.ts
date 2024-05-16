@@ -48,6 +48,10 @@ const config: HardhatUserConfig = {
       url: 'https://rpc.xlayer.tech',
       accounts: accounts
     },
+    BSC: {
+      url: 'https://bsc.rpc.blxrbdn.com',
+      accounts: accounts
+    },
     local: {
       url: 'http://127.0.0.1:8545/',
       accounts: accounts
