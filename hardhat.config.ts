@@ -16,6 +16,14 @@ const config: HardhatUserConfig = {
       url: 'https://arbitrum-one-rpc.publicnode.com',
       accounts: accounts
     },
+    Mint: {
+      url: 'https://rpc.mintchain.io',
+      accounts: accounts
+    },
+    Taiko: {
+      url: 'https://rpc.mainnet.taiko.xyz',
+      accounts: accounts
+    },
     Mode: {
       url: 'https://mainnet.mode.network',
       accounts: accounts
