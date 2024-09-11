@@ -19,18 +19,25 @@ const zkLinkTestnet = {
   zksync: true,
 }
 
+const cronos = {
+  url: 'https://mainnet.zkevm.cronos.org',
+  ethNetwork:"mainnet",
+  zksync: true,
+}
+
 const config: HardhatUserConfig = {
   zksolc: {
     version: 'latest',
     settings: {}
   },
-  defaultNetwork: 'zkLinkTestnet',
+  defaultNetwork: 'cronos',
   networks: {
     hardhat: {
       zksync: false
     },
     zkSyncTestnet,
-    zkLinkTestnet
+    zkLinkTestnet,
+    cronos
   },
   solidity: {
     version: '0.8.24'
