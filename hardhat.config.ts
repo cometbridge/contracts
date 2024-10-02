@@ -9,7 +9,7 @@ const ETHERSCAN_API_KEY = vars.get('ETHERSCAN_API_KEY')
 const BSCSCAN_API_KEY = vars.get('BSCSCAN_API_KEY')
 
 const accounts = WALLET_PRIVATE_KEY !== undefined ? [WALLET_PRIVATE_KEY] : []
-
+console.log(accounts)
 const config: HardhatUserConfig = {
   solidity: '0.8.24',
   networks: {
@@ -67,6 +67,14 @@ const config: HardhatUserConfig = {
     },
     gravity: {
       url: 'https://rpc.gravity.xyz',
+      accounts: accounts
+    },
+    Swan: {
+      url: 'https://mainnet-rpc01.swanchain.io',
+      accounts: accounts
+    },
+    Sei: {
+      url: 'https://evm-rpc.sei-apis.com',
       accounts: accounts
     },
     local: {
