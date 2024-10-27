@@ -86,7 +86,7 @@ async function main() {
   const bridgeFeeOriginal = getBridgeFee(route.bridgeFeeRate, originalAmount)
   const bridgeFeeTarget = getBridgeFee(route.bridgeFeeRate, targetAmount)
 
-  const originalDestinationGasCost = getDestinationGasCost(destinationGasCostMap, original, originalToken, route)
+  const originalDestinationGasCost = getDestinationGasCost(destinationGasCostMap, target1, originalToken, route)
   const targetDestinationGasCost = getDestinationGasCost(destinationGasCostMap, target1, targetlToken, route)
 
   if (!originalDestinationGasCost || !targetDestinationGasCost) {
