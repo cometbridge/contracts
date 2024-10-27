@@ -13,3 +13,10 @@ npx hardhat node
 npx hardhat ignition deploy ./ignition/modules/Bridge.ts
 npx hardhat ignition deploy ./ignition/modules/Bridge.ts --network Sepolia
 ```
+
+# Bridge Examples
+
+
+```shell
+npx ts-node ./examples/birdge.ts
+```
